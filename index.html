@@ -22,11 +22,15 @@ h1 span{color:var(--accent)}
 button{font:inherit;font-size:18px;font-weight:600;color:#fff;border:0;border-radius:999px;padding:15px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 22px var(--shadow);cursor:pointer;transition:transform .15s}
 button:active{transform:scale(.94)}
 .count{margin-top:14px;font-size:14px;color:var(--sub);min-height:20px}
-.gate{width:min(92vw,360px);text-align:center;padding:16px}.gate input{font:inherit;font-size:18px;width:100%;box-sizing:border-box;text-align:center;padding:14px;border-radius:999px;border:2px solid var(--accent2);background:var(--card);color:var(--text);margin:0 0 16px;outline:none}.gate .err{color:var(--accent);min-height:22px;margin-top:12px;font-size:15px}.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.gate{width:min(92vw,360px);text-align:center;padding:16px}
+.gate input{font:inherit;font-size:18px;width:100%;box-sizing:border-box;text-align:center;padding:14px;border-radius:999px;border:2px solid var(--accent2);background:var(--card);color:var(--text);margin:0 0 16px;outline:none}
+.gate .err{color:var(--accent);min-height:22px;margin-top:12px;font-size:15px}
+.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 .song{display:inline-block;margin-top:18px;padding:10px 20px;border-radius:999px;border:2px solid var(--accent2);color:var(--text);text-decoration:none;font-size:15px;font-weight:600}
-.music-bar{background:var(--card);padding:10px 18px;border-radius:999px;box-shadow:0 6px 18px var(--shadow);display:inline-flex;align-items:center;gap:12px;margin-top:15px}
-.music-bar button{font-size:14px;padding:6px 14px;box-shadow:none}
-.music-bar span{font-size:14px;color:var(--sub);min-width:40px}
+.ctl{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+.ctl button{font-size:15px;padding:8px 16px;box-shadow:none}
+.ctl span{font-size:14px;color:var(--sub);min-width:40px}
 canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
 </style>
 </head>
@@ -44,7 +48,7 @@ canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
   <div class="err" id="err"></div>
 </div>
 
-<!-- หน้าหลัก -->
+<!-- หน้าหลักหลังจากปลดล็อก -->
 <div class="wrap" id="main" style="display:none">
   <div class="cake">🎂</div>
   <h1>ถึง <span>Nongclean</span></h1>
@@ -52,23 +56,23 @@ canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
   <div class="card" id="card"></div>
   <button id="btn">🎁 กดตรงนี้เลย</button>
   <div class="count" id="count"></div>
-
-  <!-- เครื่องเล่นเพลงและปุ่มปรับเสียง -->
-  <div>
-    <div class="music-bar">
-      <button id="pp" onclick="togglePlay()">⏸ พัก</button>
-      <button onclick="setVol(-0.1)">🔉 −</button>
-      <span id="vl">70%</span>
-      <button onclick="setVol(0.1)">🔊 +</button>
-    </div>
+  
+  <!-- แถบควบคุมเสียงเพลง -->
+  <div class="ctl">
+    <button id="pp" onclick="togglePlay()">⏸ พัก</button>
+    <button onclick="setVol(-0.1)">🔉 -</button>
+    <span id="vl">70%</span>
+    <button onclick="setVol(0.1)">🔊 +</button>
   </div>
 
   <br>
   <a class="song" href="https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH" target="_blank" rel="noopener">🎵 ฟังเพลง Happy – Pharrell Williams บน Spotify</a>
 </div>
 
-<!-- เพลงตัวอย่าง (วนลูปอัตโนมัติ) -->
-<audio id="bgm" src="Happy.mp3" loop preload="auto"></audio>
+<!-- ไฟล์เพลง Happy.mp3 ที่อยู่โฟลเดอร์เดียวกัน -->
+<audio id="bgm" loop preload="auto">
+  <source src="Happy.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 const wishes0=[
@@ -81,93 +85,4 @@ const wishes0=[
 "ขอบคุณที่เป็นคลีนแบบนี้ ขอให้วันนี้เป็นวันที่ดีที่สุดวันหนึ่งของปีเลย 🥳",
 "Happy Birthday คลีน! 🎈 ขอให้ปีนี้ปังทุกด้าน และมีความสุขมากกว่าทุกปีที่ผ่านมา 🎂"
 ];
-const wishes=[
-"ขอให้ปีนี้มีแต่ความสุข","ขอให้สุขภาพแข็งแรงตลอดปี","ขอให้รวยๆ เฮงๆ ทุกวัน","ขอให้ทุกเช้าตื่นมาสดใส","ขอให้หัวเราะได้ทุกวัน","ขอให้เจอแต่คนใจดี","ขอให้งานราบรื่นไม่มีสะดุด","ขอให้เรียนเก่งสอบผ่านฉลุย","ขอให้ฝันเป็นจริงทุกข้อ","ขอให้ไม่เครียด ไม่กังวล","ขอให้นอนหลับฝันดีทุกคืน","ขอให้กินอะไรก็อร่อย","ขอให้กินเยอะแค่ไหนก็ไม่อ้วน","ขอให้มีเงินเหลือใช้เหลือเก็บ","ขอให้โชคดีตลอดปี","ขอให้ทุกวันเป็นวันที่ดี","ขอให้ยิ้มสวยแบบนี้ไปนานๆ","ขอให้ทุกอย่างลงตัว","ขอให้เจอแต่เรื่องดีๆ","ขอให้เหนื่อยน้อยๆ พักเยอะๆ","ขอให้ปีนี้ปังสุดๆ","ขอให้มีแต่คนรักและเอ็นดู","ขอให้ไม่มีปัญหากวนใจ","ขอให้ทำอะไรก็สำเร็จ","ขอให้ได้ไปเที่ยวที่อยากไป","ขอให้ได้กินของที่อยากกิน","ขอให้ได้ของที่อยากได้","ขอให้มีความสุขเล็กๆ ทุกวัน","ขอให้ใจเย็นๆ สบายๆ ทุกเรื่อง","ขอให้เป็นคนที่เก่งขึ้นทุกวัน","ขอให้มั่นใจในตัวเองมากๆ","ขอให้ผิวสวย หน้าใส","ขอให้ไม่ป่วย ไม่ไข้","ขอให้แบตไม่หมดตอนสำคัญ","ขอให้เน็ตแรงตลอดไป","ขอให้ไม่ต้องรอนาน","ขอให้รถไม่ติด","ขอให้ฝนไม่ตกเวลาออกไปข้างนอก","ขอให้มีเพื่อนดีๆ อยู่ข้างๆ","ขอให้ครอบครัวสุขภาพดี","ขอให้ทุกคนที่รักอยู่ใกล้ๆ","ขอให้ได้เจอแต่เรื่องน่ายินดี","ขอให้ทุกวันมีเสียงหัวเราะ","ขอให้เป็นปีที่ดีที่สุด","ขอให้โลกใจดีกับ Nongclean","ขอให้ใจแข็งแรงเหมือนร่างกาย","ขอให้เจอความสงบในใจ","ขอให้ไม่ต้องฝืนยิ้ม","ขอให้ได้เป็นตัวเองเสมอ","ขอให้ไม่ต้องเทียบกับใคร","ขอให้ภูมิใจในตัวเองมากๆ","ขอให้ทำสิ่งที่รักได้ทุกวัน","ขอให้ความขยันได้ผลตอบแทน","ขอให้โอกาสดีๆ เดินเข้ามา","ขอให้ตัดสินใจถูกทุกครั้ง","ขอให้มีวันหยุดเยอะๆ","ขอให้ตื่นสายได้ไม่รู้สึกผิด","ขอให้ขนมอร่อยทุกชิ้น","ขอให้กาแฟ/ชาไม่เคยหมด","ขอให้มีของกินไม่ขาดมือ","ขอให้ไม่ลืมของ ไม่ลืมกุญแจ","ขอให้ทุกแผนเป็นไปตามที่ฝัน","ขอให้สวยหล่อน่ารักขึ้นทุกวัน","ขอให้เสน่ห์แรงขึ้นอีกสิบเท่า","ขอให้มีแต่ความโชคดีตามมา","ขอให้ทุกความพยายามไม่สูญเปล่า","ขอให้ปีนี้ได้พักใจบ้าง","ขอให้ได้ทำสิ่งใหม่ๆ สนุกๆ","ขอให้ได้ไปในที่ที่ใจอยากไป","ขอให้ความรักและความเอ็นดูล้นหลาม","ขอให้ไม่มีวันแย่ๆ เลยสักวัน","ขอให้วันธรรมดากลายเป็นวันพิเศษ","ขอให้เป็นที่รักของทุกคน","ขอให้ใครๆ ก็อยากอยู่ใกล้","ขอให้ไม่ต้องแบกอะไรหนักเกินไป","ขอให้มีแรงสู้ทุกวัน","ขอให้ปีหน้าดีกว่าปีนี้อีก","ขอให้มีความสุขจนล้นใจ","ขอให้ทุกเรื่องง่ายขึ้นเยอะๆ","ขอให้เจออะไรดีๆ ทุกมุมถนน","ขอให้ทุกวันมีรอยยิ้ม","ขอให้อากาศดีทุกวัน","ขอให้ได้เห็นพระอาทิตย์ขึ้นสวยๆ","ขอให้ได้ดูหนังสนุกๆ ทุกเรื่อง","ขอให้เพลงที่ชอบดังขึ้นมาพอดี","ขอให้ได้นอนเต็มอิ่ม","ขอให้ไม่มีเรื่องให้ต้องเสียใจ","ขอให้เข้มแข็งในวันที่ท้อ","ขอให้มีคนเข้าใจเสมอ","ขอให้มีใครสักคนคอยอยู่ข้างๆ","ขอให้ได้รับความรักเต็มๆ","ขอให้ปีนี้เต็มไปด้วยเรื่องน่ารัก","ขอให้ทุกวันเป็นวันเกิดของ Nongclean","ขอให้ความเก่งเพิ่มขึ้นทุกวัน","ขอให้ทุกอย่างดีขึ้นเรื่อยๆ","ขอให้สมหวังทุกเรื่อง","ขอให้เต็มไปด้วยพลังบวก","ขอให้โชคลาภไหลมาเทมา","ขอให้เป็นปีที่น่าจดจำ","ขอให้สุขใจในทุกๆ วัน","ขอบคุณที่เป็น Nongcleanนะ 💖","สุขสันต์วันเกิด Nongclean! 🎂🎉"
-].map(w=>w+" ✨").concat(wishes0.map(w=>w.replace(/คลีน/g,'Nongclean')));
-
-const card=document.getElementById('card'),btn=document.getElementById('btn'),count=document.getElementById('count');
-let i=-1,opened=0;
-
-// ระบบจัดการเพลง
-const audio = document.getElementById('bgm');
-audio.volume = 0.7;
-let isPlaying = false;
-
-function playAudio() {
-  if (!isPlaying) {
-    audio.play().then(() => {
-      isPlaying = true;
-      document.getElementById('pp').textContent = '⏸ พัก';
-    }).catch(() => {});
-  }
-}
-
-// เริ่มเล่นเพลงทันทีที่ผู้ใช้มีส่วนร่วมกับหน้าเว็บ (คลิก, แตะ, พิมพ์) ตั้งแต่หน้าใส่รหัส
-['click', 'touchstart', 'keydown'].forEach(evt => {
-  window.addEventListener(evt, playAudio, { once: true });
-});
-
-function togglePlay() {
-  if (audio.paused) {
-    audio.play();
-    isPlaying = true;
-    document.getElementById('pp').textContent = '⏸ พัก';
-  } else {
-    audio.pause();
-    isPlaying = false;
-    document.getElementById('pp').textContent = '▶️ เล่น';
-  }
-}
-
-function setVol(delta) {
-  let newVol = Math.min(1, Math.max(0, audio.volume + delta));
-  audio.volume = newVol;
-  document.getElementById('vl').textContent = Math.round(newVol * 100) + '%';
-}
-
-// ระบบพลุ
-const cv=document.getElementById('c'),ctx=cv.getContext('2d');let parts=[];
-function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}
-size();addEventListener('resize',size);
-function burst(){
-  const cols=['#ff6f91','#ffb36b','#ffd93d','#6bcB77','#4d96ff','#c77dff'];
-  for(let k=0;k<90;k++)parts.push({x:cv.width/2,y:cv.height*.45,vx:(Math.random()-.5)*16*devicePixelRatio,vy:(Math.random()*-14-3)*devicePixelRatio,s:(Math.random()*7+4)*devicePixelRatio,c:cols[k%cols.length],r:Math.random()*6,l:1});
-  if(parts.length===90)loop();
-}
-function loop(){
-  ctx.clearRect(0,0,cv.width,cv.height);
-  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35*devicePixelRatio;p.r+=.2;p.l-=.011;ctx.globalAlpha=Math.max(p.l,0);ctx.fillStyle=p.c;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore()});
-  parts=parts.filter(p=>p.l>0);
-  if(parts.length)requestAnimationFrame(loop);else ctx.clearRect(0,0,cv.width,cv.height);
-}
-
-// ปลดล็อกรหัสผ่าน
-const pw=document.getElementById('pw'),err=document.getElementById('err'),gate=document.getElementById('gate'),main=document.getElementById('main');
-function unlock(){
-  playAudio(); // บังคับเล่นเพลงอีกครั้งเมื่อกดปุ่มเปิด
-  if(pw.value.trim().toLowerCase()==='clean'){
-    gate.style.display='none';
-    main.style.display='block';
-    burst();
-  } else {
-    err.textContent='รหัสไม่ถูกนะ ลองใหม่อีกที 🙈';
-    gate.classList.remove('shake');
-    void gate.offsetWidth;
-    gate.classList.add('shake');
-    pw.select();
-  }
-}
-
-document.getElementById('go').onclick=unlock;
-pw.addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
-btn.onclick=()=>{
-  let n;do{n=Math.floor(Math.random()*wishes.length)}while(n===i);i=n;opened++;
-  card.classList.remove('show');void card.offsetWidth;
-  card.textContent=wishes[i];card.classList.add('show');
-  btn.textContent=opened>=wishes.length?'🎁 กดอีกก็ได้นะ':'🎁 ขออีกคำอวยพร';
-  count.textContent='เปิดแล้ว '+opened+' ครั้ง';
-  burst();
-};
-</script>
-</body>
-</html>
+const wishes
