@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>สุขสันต์วันเกิด Nongclean 🎂</title>
+<style>
+:root{--bg:#fff6f0;--card:#ffffff;--text:#3b2a2a;--sub:#8a6f6f;--accent:#ff6f91;--accent2:#ffb36b;--shadow:rgba(255,111,145,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1418;--card:#2a1d23;--text:#fbeeee;--sub:#c9a9ae;--shadow:rgba(255,111,145,.2);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d1418;--card:#2a1d23;--text:#fbeeee;--sub:#c9a9ae;--shadow:rgba(255,111,145,.2);color-scheme:dark}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans Thai","Sarabun",system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wrap{width:min(92vw,420px);text-align:center;padding:16px}
+.cake{font-size:84px;line-height:1;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-3deg)}}
+h1{font-size:28px;margin:12px 0 4px}
+h1 span{color:var(--accent)}
+.sub{color:var(--sub);margin:0 0 24px}
+.card{background:var(--card);border-radius:22px;padding:22px 20px;box-shadow:0 10px 30px var(--shadow);min-height:120px;display:none;align-items:center;justify-content:center;font-size:19px;line-height:1.7;margin-bottom:20px}
+.card.show{display:flex;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+button{font:inherit;font-size:18px;font-weight:600;color:#fff;border:0;border-radius:999px;padding:15px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 22px var(--shadow);cursor:pointer;transition:transform .15s}
+button:active{transform:scale(.94)}
+.count{margin-top:14px;font-size:14px;color:var(--sub);min-height:20px}
+.gate{width:min(92vw,360px);text-align:center;padding:16px}.gate input{font:inherit;font-size:18px;width:100%;box-sizing:border-box;text-align:center;padding:14px;border-radius:999px;border:2px solid var(--accent2);background:var(--card);color:var(--text);margin:0 0 16px;outline:none}.gate .err{color:var(--accent);min-height:22px;margin-top:12px;font-size:15px}.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.song{display:inline-block;margin-top:18px;padding:10px 20px;border-radius:999px;border:2px solid var(--accent2);color:var(--text);text-decoration:none;font-size:15px;font-weight:600}
+.player{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(8px + env(safe-area-inset-bottom,0px));width:min(86vw,300px);text-align:center;z-index:5}.player iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;background:var(--card);box-shadow:0 6px 18px var(--shadow)}.player a{display:block;margin-top:4px;font-size:12px;color:var(--sub)}body{padding-bottom:200px;box-sizing:border-box}
+canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
+</style>
+</head>
+<body>
+<div class="player"><iframe src="https://open.spotify.com/embed/track/60nZcImufyMA1MKQY3dcCH?theme=0" title="Happy" style="height:152px;aspect-ratio:auto" allow="autoplay; encrypted-media; clipboard-write; fullscreen"></iframe><a href="https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH" target="_blank" rel="noopener">ถ้าไม่ขึ้น กดฟังบน Spotify</a></div>
+<canvas id="c"></canvas>
+<div class="gate" id="gate"><div class="cake">🔒</div><h1>ใส่รหัสก่อนนะ</h1><p class="sub">มีของขวัญรอ Nongclean อยู่</p><input id="pw" type="password" placeholder="รหัส" autocomplete="off"><button id="go">เปิดเลย</button><div class="err" id="err"></div></div>
+<div class="wrap" id="main" style="display:none">
+  <div class="cake">🎂</div>
+  <h1>ถึง <span>Nongclean</span></h1>
+  <p class="sub">มีของขวัญรออยู่ข้างใน…</p>
+  <div class="card" id="card"></div>
+  <button id="btn">🎁 กดตรงนี้เลย</button>
+  <div class="count" id="count"></div>
+  <a class="song" href="https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH" target="_blank" rel="noopener">🎵 ฟังเพลง Happy – Pharrell Williams</a>
+</div>
+<script>
+const wishes0=[
+"สุขสันต์วันเกิดนะคลีน 🎉 ขอให้ปีนี้เป็นปีที่ทุกอย่างลงตัว ยิ้มได้ทุกวัน และมีแต่เรื่องดีๆ เข้ามาไม่หยุด",
+"ขอให้คลีนสุขภาพแข็งแรง ไม่ป่วยไม่ไข้ นอนหลับสบาย ตื่นมาสดใสทุกเช้า 💪",
+"ขอให้เงินทองไหลมาเทมา งานราบรื่น เจอแต่คนดีๆ และโอกาสดีๆ 💸✨",
+"ขอให้ทุกความฝันของคลีนเป็นจริง ทีละอย่างๆ แบบไม่ต้องเหนื่อยเกินไป 🌟",
+"ขอให้หัวเราะเยอะๆ เครียดน้อยๆ กินอะไรก็อร่อย และไม่อ้วน (อันนี้ขอเป็นพิเศษ 😆)",
+"อายุเพิ่มขึ้นอีกปี แต่ความน่ารักและความเก่งของคลีนเพิ่มขึ้นมากกว่าอีกนะ 💖",
+"ขอบคุณที่เป็นคลีนแบบนี้ ขอให้วันนี้เป็นวันที่ดีที่สุดวันหนึ่งของปีเลย 🥳",
+"Happy Birthday คลีน! 🎈 ขอให้ปีนี้ปังทุกด้าน และมีความสุขมากกว่าทุกปีที่ผ่านมา 🎂"
+];
+const wishes=[
+"ขอให้ปีนี้มีแต่ความสุข","ขอให้สุขภาพแข็งแรงตลอดปี","ขอให้รวยๆ เฮงๆ ทุกวัน","ขอให้ทุกเช้าตื่นมาสดใส","ขอให้หัวเราะได้ทุกวัน","ขอให้เจอแต่คนใจดี","ขอให้งานราบรื่นไม่มีสะดุด","ขอให้เรียนเก่งสอบผ่านฉลุย","ขอให้ฝันเป็นจริงทุกข้อ","ขอให้ไม่เครียด ไม่กังวล","ขอให้นอนหลับฝันดีทุกคืน","ขอให้กินอะไรก็อร่อย","ขอให้กินเยอะแค่ไหนก็ไม่อ้วน","ขอให้มีเงินเหลือใช้เหลือเก็บ","ขอให้โชคดีตลอดปี","ขอให้ทุกวันเป็นวันที่ดี","ขอให้ยิ้มสวยแบบนี้ไปนานๆ","ขอให้ทุกอย่างลงตัว","ขอให้เจอแต่เรื่องดีๆ","ขอให้เหนื่อยน้อยๆ พักเยอะๆ","ขอให้ปีนี้ปังสุดๆ","ขอให้มีแต่คนรักและเอ็นดู","ขอให้ไม่มีปัญหากวนใจ","ขอให้ทำอะไรก็สำเร็จ","ขอให้ได้ไปเที่ยวที่อยากไป","ขอให้ได้กินของที่อยากกิน","ขอให้ได้ของที่อยากได้","ขอให้มีความสุขเล็กๆ ทุกวัน","ขอให้ใจเย็นๆ สบายๆ ทุกเรื่อง","ขอให้เป็นคนที่เก่งขึ้นทุกวัน","ขอให้มั่นใจในตัวเองมากๆ","ขอให้ผิวสวย หน้าใส","ขอให้ไม่ป่วย ไม่ไข้","ขอให้แบตไม่หมดตอนสำคัญ","ขอให้เน็ตแรงตลอดไป","ขอให้ไม่ต้องรอนาน","ขอให้รถไม่ติด","ขอให้ฝนไม่ตกเวลาออกไปข้างนอก","ขอให้มีเพื่อนดีๆ อยู่ข้างๆ","ขอให้ครอบครัวสุขภาพดี","ขอให้ทุกคนที่รักอยู่ใกล้ๆ","ขอให้ได้เจอแต่เรื่องน่ายินดี","ขอให้ทุกวันมีเสียงหัวเราะ","ขอให้เป็นปีที่ดีที่สุด","ขอให้โลกใจดีกับ Nongclean","ขอให้ใจแข็งแรงเหมือนร่างกาย","ขอให้เจอความสงบในใจ","ขอให้ไม่ต้องฝืนยิ้ม","ขอให้ได้เป็นตัวเองเสมอ","ขอให้ไม่ต้องเทียบกับใคร","ขอให้ภูมิใจในตัวเองมากๆ","ขอให้ทำสิ่งที่รักได้ทุกวัน","ขอให้ความขยันได้ผลตอบแทน","ขอให้โอกาสดีๆ เดินเข้ามา","ขอให้ตัดสินใจถูกทุกครั้ง","ขอให้มีวันหยุดเยอะๆ","ขอให้ตื่นสายได้ไม่รู้สึกผิด","ขอให้ขนมอร่อยทุกชิ้น","ขอให้กาแฟ/ชาไม่เคยหมด","ขอให้มีของกินไม่ขาดมือ","ขอให้ไม่ลืมของ ไม่ลืมกุญแจ","ขอให้ทุกแผนเป็นไปตามที่ฝัน","ขอให้สวยหล่อน่ารักขึ้นทุกวัน","ขอให้เสน่ห์แรงขึ้นอีกสิบเท่า","ขอให้มีแต่ความโชคดีตามมา","ขอให้ทุกความพยายามไม่สูญเปล่า","ขอให้ปีนี้ได้พักใจบ้าง","ขอให้ได้ทำสิ่งใหม่ๆ สนุกๆ","ขอให้ได้ไปในที่ที่ใจอยากไป","ขอให้ความรักและความเอ็นดูล้นหลาม","ขอให้ไม่มีวันแย่ๆ เลยสักวัน","ขอให้วันธรรมดากลายเป็นวันพิเศษ","ขอให้เป็นที่รักของทุกคน","ขอให้ใครๆ ก็อยากอยู่ใกล้","ขอให้ไม่ต้องแบกอะไรหนักเกินไป","ขอให้มีแรงสู้ทุกวัน","ขอให้ปีหน้าดีกว่าปีนี้อีก","ขอให้มีความสุขจนล้นใจ","ขอให้ทุกเรื่องง่ายขึ้นเยอะๆ","ขอให้เจออะไรดีๆ ทุกมุมถนน","ขอให้ทุกวันมีรอยยิ้ม","ขอให้อากาศดีทุกวัน","ขอให้ได้เห็นพระอาทิตย์ขึ้นสวยๆ","ขอให้ได้ดูหนังสนุกๆ ทุกเรื่อง","ขอให้เพลงที่ชอบดังขึ้นมาพอดี","ขอให้ได้นอนเต็มอิ่ม","ขอให้ไม่มีเรื่องให้ต้องเสียใจ","ขอให้เข้มแข็งในวันที่ท้อ","ขอให้มีคนเข้าใจเสมอ","ขอให้มีใครสักคนคอยอยู่ข้างๆ","ขอให้ได้รับความรักเต็มๆ","ขอให้ปีนี้เต็มไปด้วยเรื่องน่ารัก","ขอให้ทุกวันเป็นวันเกิดของ Nongclean","ขอให้ความเก่งเพิ่มขึ้นทุกวัน","ขอให้ทุกอย่างดีขึ้นเรื่อยๆ","ขอให้สมหวังทุกเรื่อง","ขอให้เต็มไปด้วยพลังบวก","ขอให้โชคลาภไหลมาเทมา","ขอให้เป็นปีที่น่าจดจำ","ขอให้สุขใจในทุกๆ วัน","ขอบคุณที่เป็น Nongclean นะ 💖","สุขสันต์วันเกิด Nongclean! 🎂🎉"
+].map(w=>w+" ✨").concat(wishes0.map(w=>w.replace(/คลีน/g,'Nongclean')));
+const card=document.getElementById('card'),btn=document.getElementById('btn'),count=document.getElementById('count');
+let i=-1,opened=0;
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');let parts=[];
+function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}
+size();addEventListener('resize',size);
+function burst(){
+  const cols=['#ff6f91','#ffb36b','#ffd93d','#6bcB77','#4d96ff','#c77dff'];
+  for(let k=0;k<90;k++)parts.push({x:cv.width/2,y:cv.height*.45,vx:(Math.random()-.5)*16*devicePixelRatio,vy:(Math.random()*-14-3)*devicePixelRatio,s:(Math.random()*7+4)*devicePixelRatio,c:cols[k%cols.length],r:Math.random()*6,l:1});
+  if(parts.length===90)loop();
+}
+function loop(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35*devicePixelRatio;p.r+=.2;p.l-=.011;ctx.globalAlpha=Math.max(p.l,0);ctx.fillStyle=p.c;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore()});
+  parts=parts.filter(p=>p.l>0);
+  if(parts.length)requestAnimationFrame(loop);else ctx.clearRect(0,0,cv.width,cv.height);
+}
+const pw=document.getElementById('pw'),err=document.getElementById('err'),gate=document.getElementById('gate'),main=document.getElementById('main');
+function unlock(){
+  if(pw.value.trim().toLowerCase()==='clean'){gate.style.display='none';main.style.display='block';burst();playSong()}
+  else{err.textContent='รหัสไม่ถูกนะ ลองใหม่อีกที 🙈';gate.classList.remove('shake');void gate.offsetWidth;gate.classList.add('shake');pw.select()}
+}
+function playSong(){try{document.querySelector('.player iframe').contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:''}),'*')}catch(e){}}
+['pointerdown','keydown'].forEach(t=>addEventListener(t,playSong,{once:true}));
+document.getElementById('go').onclick=unlock;
+pw.addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
+btn.onclick=()=>{
+  let n;do{n=Math.floor(Math.random()*wishes.length)}while(n===i);i=n;opened++;
+  card.classList.remove('show');void card.offsetWidth;
+  card.textContent=wishes[i];card.classList.add('show');
+  btn.textContent=opened>=wishes.length?'🎁 กดอีกก็ได้นะ':'🎁 ขออีกคำอวยพร';
+  count.textContent='เปิดแล้ว '+opened+' ครั้ง';
+  burst();
+};
+</script>
+</body>
+</html>
