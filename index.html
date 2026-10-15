@@ -45,6 +45,15 @@ canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
   <p class="sub">มีของขวัญรอ Nongclean อยู่</p>
   <input id="pw" type="password" placeholder="รหัส" autocomplete="off">
   <button id="go">เปิดเลย</button>
+  
+  <!-- แถบควบคุมเสียงเพลงหน้าแรก -->
+  <div class="ctl">
+    <button id="pp1" onclick="togglePlay()">🎵 เล่นเพลง</button>
+    <button onclick="setVol(-0.1)">🔉 -</button>
+    <span id="vl1">70%</span>
+    <button onclick="setVol(0.1)">🔊 +</button>
+  </div>
+  
   <div class="err" id="err"></div>
 </div>
 
@@ -57,11 +66,11 @@ canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
   <button id="btn">🎁 กดตรงนี้เลย</button>
   <div class="count" id="count"></div>
   
-  <!-- แถบควบคุมเสียงเพลง -->
+  <!-- แถบควบคุมเสียงเพลงหน้าหลัก -->
   <div class="ctl">
-    <button id="pp" onclick="togglePlay()">⏸ พัก</button>
+    <button id="pp2" onclick="togglePlay()">⏸ พักเพลง</button>
     <button onclick="setVol(-0.1)">🔉 -</button>
-    <span id="vl">70%</span>
+    <span id="vl2">70%</span>
     <button onclick="setVol(0.1)">🔊 +</button>
   </div>
 
@@ -69,10 +78,8 @@ canvas{position:fixed;inset:0;pointer-events:none;width:100%;height:100%}
   <a class="song" href="https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH" target="_blank" rel="noopener">🎵 ฟังเพลง Happy – Pharrell Williams บน Spotify</a>
 </div>
 
-<!-- ใช้ลิงก์ตรงสำหรับเพลง -->
-<audio id="bgm" loop preload="auto">
-  <source src="https://drive.google.com/file/d/1mfKLX2KbgwvmxpRDymtvstW5MILgpHp0/view?usp=sharing" type="audio/mpeg">
-</audio>
+<!-- ลิงก์เพลงออนไลน์ Direct MP3 -->
+<audio id="bgm" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"></audio>
 
 <script>
 const wishes0=[
@@ -109,35 +116,42 @@ function loop(){
   if(parts.length)requestAnimationFrame(loop);else ctx.clearRect(0,0,cv.width,cv.height);
 }
 
-// ระบบเพลงและการเล่นเสียง
+// ระบบเล่นเสียงเพลง
 const bgm = document.getElementById('bgm');
 bgm.volume = 0.7;
 
 function playAudio() {
   if (bgm.paused) {
-    bgm.play().catch(e => console.log("Autoplay blocked:", e));
+    bgm.play().then(() => {
+      document.getElementById('pp1').textContent = '⏸ พักเพลง';
+      document.getElementById('pp2').textContent = '⏸ พักเพลง';
+    }).catch(e => console.log("Waiting for user interaction..."));
   }
 }
 
 function setVol(delta) {
   let newVol = Math.max(0, Math.min(1, bgm.volume + delta));
   bgm.volume = newVol;
-  document.getElementById('vl').textContent = Math.round(newVol * 100) + '%';
+  const pct = Math.round(newVol * 100) + '%';
+  document.getElementById('vl1').textContent = pct;
+  document.getElementById('vl2').textContent = pct;
 }
 
 function togglePlay() {
   if (bgm.paused) {
     bgm.play();
-    document.getElementById('pp').textContent = '⏸ พัก';
+    document.getElementById('pp1').textContent = '⏸ พักเพลง';
+    document.getElementById('pp2').textContent = '⏸ พักเพลง';
   } else {
     bgm.pause();
-    document.getElementById('pp').textContent = '▶️ เล่น';
+    document.getElementById('pp1').textContent = '▶️ เล่นเพลง';
+    document.getElementById('pp2').textContent = '▶️ เล่นเพลง';
   }
 }
 
-// เริ่มเล่นเพลงเมื่อผู้ใช้แตะหรือพิมพ์ที่หน้าแรก
-['pointerdown', 'keydown', 'click', 'touchstart'].forEach(evt => {
-  window.addEventListener(evt, playAudio, { once: true });
+// ผูกการเล่นเพลงทันทีที่มีการแตะ พิมพ์ หรือคลิกหน้าจอ
+['pointerdown', 'keydown', 'click', 'touchstart', 'focus'].forEach(evt => {
+  window.addEventListener(evt, playAudio);
 });
 
 // ระบบใส่รหัสผ่าน
